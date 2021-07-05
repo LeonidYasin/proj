@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> userList = new ArrayList<>();
     UserAdapter userAdapter;
     Button addUserBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void recyclerViewInit(){
+
+    private void recyclerViewInit() {
         Users users = new Users(MainActivity.this);
         userList = users.getUserList();
         userAdapter = new UserAdapter(userList);
@@ -50,13 +52,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         recyclerViewInit();
     }
 
-    private  class UserHolder extends RecyclerView.ViewHolder{
+    private class UserHolder extends RecyclerView.ViewHolder {
         TextView itemTextView;
+        User userItem;
+
         public UserHolder(LayoutInflater inflater, ViewGroup viewGroup) {
             super(inflater.inflate(R.layout.single_item, viewGroup, false));
             // itemView - текущий layout single_item
@@ -65,28 +69,34 @@ public class MainActivity extends AppCompatActivity {
             itemTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String text =itemTextView.getText().toString();
+
+                    String text = itemTextView.getText().toString();
                     System.out.println(text);
                     //Intent intent = new Intent(MainActivity.this, UserFormActivity.class);
                     //startActivity(intent);
 
                     Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
                     intent.putExtra("text", text);
+                    intent.putExtra("UUID", userItem.getUuid().toString());
 
                     startActivity(intent);
                 }
             });
         }
 
-        public void bind(String userString){
+        public void bind(String userString, User user) {
             itemTextView.setText(userString);
+            userItem = user;
         }
     }
-    private class UserAdapter extends RecyclerView.Adapter<UserHolder>{
+
+    private class UserAdapter extends RecyclerView.Adapter<UserHolder> {
         ArrayList<User> users;
+
         public UserAdapter(ArrayList<User> users) {
             this.users = users;
         }
+
         @Override
         public UserHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
@@ -96,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(UserHolder userHolder, int position) {
             User user = users.get(position);
-            String userString = user.getUserName()+"\n"+user.getUserLastName();
-            userHolder.bind(userString);
+            String userString = user.getUserName() + "\n" + user.getUserLastName();
+            userHolder.bind(userString, user);
         }
 
         @Override
