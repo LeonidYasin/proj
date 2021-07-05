@@ -10,6 +10,9 @@ public class User {
     public User(){
         this.uuid = UUID.randomUUID();
     }
+    public User(UUID uuid){
+        this.uuid = uuid;
+    }
 
     public String getUserName() {
         return userName;
