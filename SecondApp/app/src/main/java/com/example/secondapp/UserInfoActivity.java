@@ -1,15 +1,12 @@
 package com.example.secondapp;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class UserInfoActivity extends AppCompatActivity {
     TextView textViewInfoName;
@@ -19,6 +16,7 @@ public class UserInfoActivity extends AppCompatActivity {
     Button editUserInfo;
     Users users;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +42,9 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         user = users.getUserFromDB(user.getUuid());
         textViewInfoName = findViewById(R.id.textViewInfoName);

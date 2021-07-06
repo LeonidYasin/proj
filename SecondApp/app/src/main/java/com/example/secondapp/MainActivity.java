@@ -1,10 +1,5 @@
 package com.example.secondapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> userList = new ArrayList<>();  // Создаём коллекцию список юзеров
     UserAdapter userAdapter;  // Определяем переменную адаптера
     Button addUserBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void recyclerViewInit(){
+
+    private void recyclerViewInit() {
         Users users = new Users(MainActivity.this);
         userList = users.getUserList();
         userAdapter = new UserAdapter(userList);  // создаём экземпляр адаптера
@@ -54,15 +55,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         recyclerViewInit();
     }
 
     // ViewHolder описывает представление элемента и метаданные о его месте в RecyclerView.
-    private  class UserHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class UserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView itemTextView;
         User user;
+
         public UserHolder(LayoutInflater inflater, ViewGroup viewGroup) {
             super(inflater.inflate(R.layout.single_item, viewGroup, false));
             // itemView - текущий layout single_item
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             itemView.setOnClickListener(this);
         }
 
-        public void bind(String userString, User user){
+        public void bind(String userString, User user) {
             itemTextView.setText(userString);
             this.user = user;
         }
@@ -85,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Адаптер обеспечивает привязку набора данных для конкретного юзера к представлению,
     // отображаемому в RecyclerView.
-    private class UserAdapter extends RecyclerView.Adapter<UserHolder>{
+    private class UserAdapter extends RecyclerView.Adapter<UserHolder> {
         ArrayList<User> users;
+
         public UserAdapter(ArrayList<User> users) {
             this.users = users;
         }
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(UserHolder userHolder, int position) {
             User user = users.get(position);
-            String userString = user.getUserName()+"\n"+user.getUserLastName();
+            String userString = user.getUserName() + "\n" + user.getUserLastName();
             userHolder.bind(userString, user);
         }
 

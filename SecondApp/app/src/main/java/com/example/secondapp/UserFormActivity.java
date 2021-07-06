@@ -1,11 +1,11 @@
 package com.example.secondapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class UserFormActivity extends AppCompatActivity {
     Button insertUserBtn;
@@ -13,6 +13,7 @@ public class UserFormActivity extends AppCompatActivity {
     EditText editTextLastName;
     EditText editTextPhone;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,12 +24,12 @@ public class UserFormActivity extends AppCompatActivity {
         editTextPhone = findViewById(R.id.editTextPhone);
         insertUserBtn = findViewById(R.id.insertUserBtn);
         boolean isUpdate = user != null;
-        if(isUpdate){ // Если редактируем юзера
+        if (isUpdate) { // Если редактируем юзера
             editTextName.setText(user.getUserName());
             editTextLastName.setText(user.getUserLastName());
             editTextPhone.setText(user.getPhone());
             insertUserBtn.setText("Изменить запись");
-        }else{ // если добавляем нового
+        } else { // если добавляем нового
             user = new User();
             insertUserBtn.setText("Добавить запись");
         }
