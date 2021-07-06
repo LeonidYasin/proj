@@ -5,47 +5,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UserFormActivity">
+    tools:context=".UserInfoActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewInfoName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Добавить запись"
-        android:textSize="28sp" />
+        android:textSize="26sp"
+        android:text="TextView" />
 
-    <EditText
-        android:layout_marginTop="10dp"
-        android:id="@+id/editTextName"
+    <TextView
+        android:id="@+id/textViewInfoLastName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Имя" />
+        android:textSize="26sp"
+        android:text="TextView" />
 
-    <EditText
-        android:layout_marginTop="10dp"
-        android:id="@+id/editTextLastName"
+    <TextView
+        android:id="@+id/textViewInfoPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Фамилия" />
+        android:textSize="26sp"
+        android:text="TextView" />
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
-    <EditText
-        android:layout_marginTop="10dp"
-        android:id="@+id/editTextPhone"
+    <LinearLayout
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Номер телефона"
-        android:inputType="phone" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_marginTop="15dp"
-        android:id="@+id/deleteUserBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Удалить запись" />
+        <Button
+            android:id="@+id/editUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Редактирвать" />
+
+        <Button
+            android:id="@+id/removeUserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Удалить" />
+    </LinearLayout>
 </LinearLayout>

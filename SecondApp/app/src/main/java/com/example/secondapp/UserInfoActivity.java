@@ -1,67 +1,58 @@
 package com.example.secondapp;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import java.util.ArrayList;
+import android.widget.TextView;
 
 public class UserInfoActivity extends AppCompatActivity {
-
-    Button deleteUserBtn;
-    EditText editTextName;
-    EditText editTextLastName;
-    EditText editTextPhone;
-    String UUID;
+    TextView textViewInfoName;
+    TextView textViewInfoLastName;
+    TextView textViewInfoPhone;
+    Button removeUserInfo;
+    Button editUserInfo;
     Users users;
-
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-
-        String text = getIntent().getStringExtra("text");
-        UUID = getIntent().getStringExtra("UUID");
-        System.out.println(UUID);
-
-        editTextName = findViewById(R.id.editTextName);
-        editTextName.setText(text.split("\n")[0]);
-
-        editTextLastName = findViewById(R.id.editTextLastName);
-        editTextLastName.setText(text.split("\n")[1]);
-
-        editTextPhone = findViewById(R.id.editTextPhone);
-        editTextPhone.setText(UUID);
-
         users = new Users(UserInfoActivity.this);
-
-        //users.infoUserByUSERNAME(text.split("\n")[0]);
-        users.infoUserByUUID(UUID);
-        ArrayList<User> userArrayList = users.getUserList();
-        for (User user : userArrayList) {
-            if (user.getUuid().toString().contentEquals(UUID)) {
-                editTextName.setText(user.getUserName());
-                editTextLastName.setText(user.getUserLastName());
-                editTextPhone.setText(user.getPhone());
-            }
-        }
-
-        deleteUserBtn = findViewById(R.id.deleteUserBtn);
-        deleteUserBtn.setOnClickListener(new View.OnClickListener() {
+        user = (User) getIntent().getSerializableExtra("user");
+        removeUserInfo = findViewById(R.id.removeUserInfo);
+        editUserInfo = findViewById(R.id.editUserInfo);
+        editUserInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(UserInfoActivity.this, UserFormActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
 
-                users.deleteUser(UUID);
-                Toast.makeText(UserInfoActivity.this,
-                        "user удалён из базы!",
-                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        removeUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                users.removeUser(user.getUuid());
                 onBackPressed();
             }
         });
-
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        user = users.getUserFromDB(user.getUuid());
+        textViewInfoName = findViewById(R.id.textViewInfoName);
+        textViewInfoLastName = findViewById(R.id.textViewInfoLastName);
+        textViewInfoPhone = findViewById(R.id.textViewInfoPhone);
+        textViewInfoName.setText(user.getUserName());
+        textViewInfoLastName.setText(user.getUserLastName());
+        textViewInfoPhone.setText(user.getPhone());
     }
 }

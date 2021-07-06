@@ -12,6 +12,7 @@ import com.example.secondapp.database.UserDbSchema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Users {
     private ArrayList<User> userList;
@@ -22,8 +23,11 @@ public class Users {
         this.context = context.getApplicationContext();
         this.database = new UserBaseHelper(context).getWritableDatabase();
     }
-
-    private static ContentValues getContentValues(User user) {
+    public void addUser(User user){
+        ContentValues values = getContentValues(user);
+        database.insert(UserDbSchema.UserTable.NAME, null,values);
+    }
+    private static ContentValues getContentValues(User user){
         ContentValues values = new ContentValues();
         // Сопоставляем колонки и свойства объекта User
         values.put(UserDbSchema.Cols.UUID, user.getUuid().toString());
@@ -33,79 +37,48 @@ public class Users {
         return values;
     }
 
-    public void addUser(User user) {
-        ContentValues values = getContentValues(user);
-        database.insert(UserDbSchema.UserTable.NAME, null, values);
-
-    }
-
-    public void deleteUser(String uUID) {
-
-
-        database.delete(UserDbSchema.UserTable.NAME,
-                UserDbSchema.Cols.UUID + " = ?",
-                new String[]{uUID});
-
-    }
-
-    public void infoUserByUUID(String uUID) {
-
-        UserCursorWrapper cursor = new UserCursorWrapper(
-                database.query(UserDbSchema.UserTable.NAME, null,
-                        UserDbSchema.Cols.UUID + " = ?",
-                        new String[]{uUID},
-                        null, null, null));
-        cursor.moveToFirst();
-        String uuidString = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.UUID));
-        String userName = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.USERNAME));
-        String userLastName = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.USERLASTNAME));
-        String phone = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.PHONE));
-
-        System.out.println("uuidString " + uuidString);
-        System.out.println("userName " + userName);
-        System.out.println("userLastName " + userLastName);
-        System.out.println("phone " + phone);
-        // database.insert(UserDbSchema.UserTable.NAME, null,values);
-    }
-
-    public void infoUserByUSERNAME(String USERNAME) {
-
-        UserCursorWrapper cursor = new UserCursorWrapper(database.query(UserDbSchema.UserTable.NAME, null,
-                UserDbSchema.Cols.USERNAME + " = ?",
-                new String[]{USERNAME},
-                null, null, null));
-        cursor.moveToFirst();
-        String uuidString = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.UUID));
-        String userName = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.USERNAME));
-        String userLastName = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.USERLASTNAME));
-        String phone = cursor.getString(cursor.getColumnIndex(UserDbSchema.Cols.PHONE));
-
-        System.out.println("uuidString " + uuidString);
-        System.out.println("userName " + userName);
-        System.out.println("userLastName " + userLastName);
-        System.out.println("phone " + phone);
-
-    }
-
-    private UserCursorWrapper queryUsers() {
-        Cursor cursor = database.query(UserDbSchema.UserTable.NAME, null, null, null, null, null, null);
+    private UserCursorWrapper queryUsers(){
+        Cursor cursor = database.query(UserDbSchema.UserTable.NAME,null,null,null,null,null,null);
         return new UserCursorWrapper(cursor);
     }
 
-    public ArrayList<User> getUserList() {
+    public ArrayList<User> getUserList(){
         this.userList = new ArrayList<User>();
         UserCursorWrapper cursorWrapper = queryUsers();
         try {
             cursorWrapper.moveToFirst();
-            while (!cursorWrapper.isAfterLast()) {
+            while (!cursorWrapper.isAfterLast()){
                 User user = cursorWrapper.getUser();
                 userList.add(user);
                 cursorWrapper.moveToNext();
 
             }
-        } finally {
+        }finally {
             cursorWrapper.close();
         }
         return userList;
+    }
+    public User getUserFromDB(UUID uuid){
+        Cursor cursor = database.query(UserDbSchema.UserTable.NAME,
+                null,
+                UserDbSchema.Cols.UUID+"=?",
+                new String[]{uuid.toString()},
+                null, null, null);
+        UserCursorWrapper cursorWrapper = new UserCursorWrapper(cursor);
+        cursorWrapper.moveToFirst();
+        return cursorWrapper.getUser();
+    }
+    public void removeUser(UUID uuid){
+        String stringUuid = uuid.toString();
+        database.delete(UserDbSchema.UserTable.NAME,
+                UserDbSchema.Cols.UUID+"=?", new String[]{stringUuid});
+    }
+    public void updateUser(User user){
+        ContentValues values = getContentValues(user);
+        String stringUuid = user.getUuid().toString();
+        database.update(UserDbSchema.UserTable.NAME,
+                values,
+                UserDbSchema.Cols.UUID+"=?", new String[]{stringUuid}
+        );
     }
 }
